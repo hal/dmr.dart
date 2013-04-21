@@ -1,0 +1,1333 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ModelNode class / dmr Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="dmr" data-type="ModelNode">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../dmr.html">dmr</a> &rsaquo; <a href="../dmr/ModelNode.html">ModelNode</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ModelNode</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>A dynamic model representation node object.</p>
+<pre class="source">
+class ModelNode {
+
+ static const int MIN_INT = -2147483648;
+ static const int MAX_INT = 2147483647;
+ static const String OUTCOME = "outcome";
+ static const String SUCCESS = "success";
+ static const String FAILURE_DESCRIPTION = "failure-description";
+
+ bool _protect;
+
+ ModelValue _value;
+
+ Map&lt;String, dynamic&gt; tags;
+
+ ModelNode() {
+   _protect = false;
+   tags = new Map&lt;String, dynamic&gt;();
+   _value = new _UndefinedValue();
+ }
+
+ ModelNode.from(ModelValue value) {
+   _protect = false;
+   tags = new Map&lt;String, dynamic&gt;();
+   _value = value;
+ }
+
+
+ //---------------------------------------- as methods
+
+ /**
+  * Get the value of this node as an `num`. Collection types will return the size
+  * of the collection for this value.  Other types may attempt a string conversion.
+  *
+  * If no conversion is possible, the [onError] is called with the [value] as argument, and its return
+  * value is used instead. If no [onError] is provided, a [FormatException] is thrown.
+  */
+ num asNum([num onError(ModelValue value)]) =&gt; _value.asNum(onError);
+
+ /**
+  * Get the value of this node as an `bool`. Collection types return `true` for non-empty
+  * collections. Numerical types return `true` for non-zero values.
+  *
+  * If no conversion is possible, the [onError] is called with the [value] as argument, and its return
+  * value is used instead. If no [onError] is provided, a [FormatException] is thrown.
+  */
+ bool asBool([bool onError(ModelValue value)]) =&gt; _value.asBool(onError);
+
+ /**
+  * Get the value as a string. This is the literal value of this model node. More than one node type may
+  * yield the same value for this method.
+  */
+ String asString() =&gt; _value.asString();
+
+ /**
+  * Get the value of this node as a byte array.  Strings and string-like values will return
+  * the UTF-8 encoding of the string.  Numerical values will return the byte representation of the
+  * number.
+  */
+ List&lt;int&gt; asBytes() =&gt; _value.asBytes();
+
+ /**
+  * Get the value of this node as a property. Object values will return a property if there is exactly one
+  * property in the object. List values will return a property if there are exactly two items in the list,
+  * and if the first is convertible to a string.
+  *
+  * Throws a [FormatException] if no conversion is possible.
+  */
+ Property asProperty() =&gt; _value.asProperty();
+
+ /**
+  * Get the value of this node as a property list. Object values will return a list of properties representing
+  * each key-value pair in the object. List values will return all the values of the list, failing if any of the
+  * values are not convertible to a property value.
+  *
+  * Throws a [FormatException] if no conversion is possible.
+  */
+ List&lt;Property&gt; asPropertyList() =&gt; _value.asPropertyList();
+
+ /**
+  * Get a copy of this value as an object. Object values will simply copy themselves as by the [clone] method.
+  * Property values will return a single-entry object whose key and value are copied from the property key and value.
+  * List values will attempt to interpolate the list into an object by iterating each item, mapping each property
+  * into an object entry and otherwise taking pairs of list entries, converting the first to a string, and using the
+  * pair of entries as a single object entry.  If an object key appears more than once in the source object, the last
+  * key takes precedence.
+  *
+  * Throws a [FormatException] if no conversion is possible.
+  */
+ ModelNode asObject() =&gt; _value.asObject();
+
+ /**
+  * Get the value of this node as a type, expressed using the {@code ModelType} enum. The string
+  * value of this node must be convertible to a type.
+  *
+  * Throws a [FormatException] if no conversion is possible.
+  */
+ ModelType asType() =&gt; _value.asType();
+
+ /**
+  * Get the list of entries contained in this object. Property node types always contain exactly one entry (itself).
+  * Lists will return an unmodifiable view of their contained list. Objects will return a list of properties corresponding
+  * to the mappings within the object. Other types will return an empty list.
+  */
+ List&lt;ModelNode&gt; asList() =&gt; _value.asList();
+
+
+ //---------------------------------------- [], is, has, getter methods
+
+ /**
+  * Get the child of this node with the given [indexOrName]. If [indexOrName] is an int and the node is undefined,
+  * it will be initialized to be of type [ModelType.LIST]. If [indexOrName] is a string and the node is undefined,
+  * it will be initialized to be of type [ModelType.OBJECT].
+  *
+  * When called on property values, the [indexOrName] must match the property name.
+  *
+  * Throws an [RangeError] if this node does not support getting a child with the given [indexOrName]
+  */
+ ModelNode operator [](indexOrName) {
+   if (indexOrName is int) {
+     if (_hasUndefinedValue()) {
+       _assertNotProtected();
+       _value = new _ListValue();
+     }
+     return _value[indexOrName];
+   } else if (indexOrName is String) {
+     if (_hasUndefinedValue()) {
+       _assertNotProtected();
+       _value = new _ObjectValue();
+     }
+     return _value[indexOrName];
+   }
+   throw new RangeError("Invalid index $indexOrName");
+ }
+
+ /**
+  * Determine whether this node has a child with the given index or name. Property node types always contain exactly one
+  * value with a key equal to the property name.
+  */
+ bool has(indexOrName) =&gt; _value.has(indexOrName);
+
+ /**
+  * Determine whether this node has a defined child with the given index or name. Property node types always contain
+  * exactly one value with a key equal to the property name..
+  */
+ bool hasDefined(indexOrName) =&gt; _value.has(indexOrName) &amp;&amp; _value[indexOrName].isDefined();
+
+ /**
+  * Determine whether this node is defined. Equivalent to the expression: `type != ModelType.UNDEFINED`
+  */
+ bool isDefined() =&gt; type != ModelType.UNDEFINED;
+
+ bool _hasUndefinedValue() =&gt; _value == new _UndefinedValue();
+
+ /**
+  * Require the existence of a child of this node with the given index or name, returning the child. If no such
+  * child exists, an exception is thrown.
+  *
+  * When called on property values, the name must match the property name.
+  */
+ ModelNode require(indexOrName) =&gt; _value.require(indexOrName);
+
+ ModelType get type =&gt; _value.type;
+
+ bool get failure =&gt; hasDefined(OUTCOME) &amp;&amp; this[OUTCOME].asString() != SUCCESS;
+
+ String get failureDescription =&gt; hasDefined(FAILURE_DESCRIPTION) ? this[FAILURE_DESCRIPTION].asString() : "No failure-description provided";
+
+ /**
+  * Get the set of keys contained in this object. Property node types always contain exactly one value with a key
+  * equal to the property name. Other non-object types will return an empty set.
+  */
+ Iterable&lt;String&gt; get keys =&gt; _value.keys;
+
+
+ //---------------------------------------- setter methods
+
+ /**
+  * Change this node's value to the given value. If [value] is a [ModelNode] or a list of [ModelNode]s, the value(s)
+  * are copied.
+  */
+ void setValue(value) {
+   if (value == null) {
+     throw new ArgumentError("Value must not be null");
+   }
+   _assertNotProtected();
+   if (value is int) {
+     if (value &lt; MIN_INT || value &gt; MAX_INT) {
+       _value = new _NumValue(value, ModelType.LONG);
+     } else {
+       _value = new _NumValue(value, ModelType.INT);
+     }
+   } else if (value is double) {
+     _value = new _NumValue(value, ModelType.DOUBLE);
+   } else if (value is bool) {
+     _value = new _BooleanValue(value);
+   } else if (value is String) {
+     _value = new _StringValue(value);
+   } else if (value is Property) {
+     _value = new _PropertyValue(value);
+   } else if (value is ModelType) {
+     _value = new _ModelTypeValue(value);
+   } else if (value is ModelNode) {
+     _value = (value as ModelNode)._value.copy();
+   } else if (value is List &amp;&amp; !(value as List).isEmpty) {
+     var elem = (value as List)[0];
+     if (elem is int) {
+       // we have a 'byte' array
+       _value = new _BytesValue(value);
+     } else if (elem is ModelNode) {
+       // we have a list of ModelNode
+       var newList = new List&lt;ModelNode&gt;();
+       (value as List&lt;ModelNode&gt;).forEach((node) {
+         if (node == null) {
+           newList.add(new ModelNode());
+         } else {
+           newList.add(node.clone());
+         }
+       });
+       _value = new _ListValue.from(newList);
+     }
+   }
+ }
+
+ /**
+  * Change this node's value to a property with the given name and value.
+  */
+ void setProperty(String name, value) {
+   if (name == null) {
+     throw new ArgumentError("Name must not be null");
+   }
+   if (value == null) {
+     throw new ArgumentError("Value must not be null");
+   }
+   _assertNotProtected();
+   if (value is num || value is bool || value is String || value is Property) {
+     var node = new ModelNode()..setValue(value);
+     _value = new _PropertyValue.nameValue(name, node);
+   } else if (value is ModelNode) {
+     _value = new _PropertyValue.nameValue(name, value);
+   }
+   else if (value is List &amp;&amp; !(value as List).isEmpty &amp;&amp; (value as List)[0] is int) {
+     // we have a 'byte' array
+     var node = new ModelNode()..setValue(value);
+     _value = new _PropertyValue.nameValue(name, node);
+   }
+ }
+
+ /**
+  * Change this node's value to an empty object.
+  */
+ void setEmptyObject() {
+   _assertNotProtected();
+   _value = new _ObjectValue();
+ }
+
+ /**
+  * Change this node's value to an empty list.
+  */
+ void setEmptyList() {
+   _assertNotProtected();
+   _value = new _ListValue();
+ }
+
+ /**
+  * Change this node's value to the given expression value.
+  */
+ void setExpression(String expression) {
+   if (expression == null) {
+     throw new ArgumentError("Value must not be null");
+   }
+   _assertNotProtected();
+   _value = new _ExpressionValue(expression);
+ }
+
+ /**
+  * Change this node's value to a property with the given name and expression value.
+  */
+ void setPropertyExpression(String name, String value) {
+   _assertNotProtected();
+   var node = new ModelNode()..setExpression(value);
+   _value = new _PropertyValue.nameValue(name, node);
+ }
+
+ /**
+  * Operator which combines the `[]` operator with the [setValue] method.
+  * Shortcut for `node[indexOrName].setValue(value)`
+  */
+ void operator []=(indexOrName, value) =&gt; this[indexOrName].setValue(value);
+
+
+ //---------------------------------------- add methods
+
+ /**
+  * Add a new node to the end of this node's value list. If the node is undefined, it will be initialized to be of
+  * type [ModelType.LIST]. The new node is returned.
+  */
+ ModelNode add() {
+   _assertNotProtected();
+   if (_hasUndefinedValue()) {
+     _value = new _ListValue();
+   }
+   return _value.add();
+ }
+
+ /**
+  * Add a new node by calling [add] and call [assign] on it with the specified [value].
+  * Convenience method for: `add().set(value)`
+  */
+ void addValue(value) =&gt; add().setValue(value);
+
+ /**
+  * Add a new node by calling [add] and then set the specified property on it.
+  * Convenience method for: `add().setProperty(name, value)`
+  */
+ void addProperty(String name, value) =&gt; add().setProperty(name, value);
+
+ /**
+  * Add a new node by calling [add] and then set the specified [expression].
+  * Convenience method for: `add().setExpression(expression);`
+  */
+ void addExpression(String expression) =&gt; add().setExpression(expression);
+
+ /**
+  * Add a node of type [ModelType.OBJECT] to the end of this node's value list and return it. If this node is
+  * undefined, it will be initialized to be of type [ModelType.LIST].
+  */
+ ModelNode addEmptyObject() {
+   var node = add();
+   node.setEmptyObject();
+   return node;
+ }
+
+ /**
+  * Add a node of type [ModelType.LIST] to the end of this node's value list and return it. If this node is
+  * undefined, it will be initialized to be of type [ModelType.LIST].
+  */
+ void addEmptyList() {
+   var node = add();
+   node.setEmptyList();
+ }
+
+
+ //---------------------------------------- misc methods
+
+ /**
+  * Clear this nodes value and change its type to [ModelType.UNDEFINED].
+  */
+ void clear() {
+   _assertNotProtected();
+   _value = new _UndefinedValue();
+ }
+
+ /**
+  * Remove a child of this node, returning the child.  If no such child exists, an exception is thrown.
+  */
+ void remove(String name) =&gt; _value.remove(name);
+
+ /**
+  * Return a copy of this model node, with all system property expressions locally resolved. The caller must have
+  * permission to access all of the system properties named in the node tree.
+  */
+ ModelNode resolve() =&gt; new ModelNode()..resolve();
+
+ /**
+  * Prevent further modifications to this node and its sub-nodes.  Note that copies
+  * of this node made after this method call will not be protected.
+  */
+ void protect() {
+   if (!_protect) {
+     _protect = true;
+     _value.protect();
+   }
+ }
+
+ void _assertNotProtected() {
+   if (_protect) {
+     throw new StateError("ModelNode is protected against modifications");
+   }
+ }
+
+ /**
+  * Clones this model node.
+  */
+ ModelNode clone() =&gt; new ModelNode.from(_value.copy());
+
+
+ //---------------------------------------- equal and hashCode
+
+ bool operator ==(other) {
+   if (identical(this, other)) {
+     return true;
+   }
+   else if (other is ModelNode) {
+     return _value == (other as ModelNode)._value;
+   }
+   return false;
+ }
+
+ int get hashCode =&gt; _value.hashCode;
+
+
+ //---------------------------------------- string and format methods
+
+ /**
+  * Get a human-readable string representation of this model node, formatted nicely (possibly on multiple lines).
+  */
+ String toString() =&gt; _value.toString();
+
+ String toJson() =&gt; _value.toJson();
+
+ void _format(StringBuffer buffer, bool json, [int indent = 0]) =&gt; _value._format(buffer, json, indent);
+
+
+ //---------------------------------------- external and base64 methods
+
+ String toBase64() {
+   var output = new _DataOutput();
+   _writeExternal(output);
+   return _Base64.encode(output.bytes);
+ }
+
+ static fromBase64(String encoded) {
+   // Smilla was here!
+   var node = new ModelNode();
+   node._readExternal(new _DataInput(_Base64.decode(encoded)));
+   return node;
+ }
+
+ void _readExternal(_DataInput input) {
+   _assertNotProtected();
+   ModelType type = new ModelType(new String.fromCharCode(input.readByte()));
+   switch (type) {
+     case ModelType.UNDEFINED:
+       _value = new _UndefinedValue();
+       break;
+     case ModelType.BIG_DECIMAL:
+     case ModelType.BIG_INTEGER:
+       throw new UnsupportedError("Decoding / encoding ${ModelType.BIG_INTEGER} and ${ModelType.BIG_DECIMAL} is not supported yet!");
+     case ModelType.BOOLEAN:
+       _value = new _BooleanValue(input.readBool());
+       break;
+     case ModelType.BYTES:
+       int length = input.readNum(ModelType.INT);
+       _value = new _BytesValue(input.readBytes(length));
+       break;
+     case ModelType.DOUBLE:
+       _value = new _NumValue(input.readNum(ModelType.DOUBLE), ModelType.DOUBLE);
+       break;
+     case ModelType.EXPRESSION:
+       _value = new _ExpressionValue(input.readUtf());
+       break;
+     case ModelType.INT:
+       _value = new _NumValue(input.readNum(ModelType.INT), ModelType.INT);
+       break;
+     case ModelType.LIST:
+       int length = input.readNum(ModelType.INT);
+       var list = new List&lt;ModelNode&gt;();
+       for (int i = 0; i &lt; length; i ++) {
+         var node = new ModelNode();
+         node._readExternal(input);
+         list.add(node);
+       }
+       _value = new _ListValue.from(list);
+       break;
+     case ModelType.LONG:
+       _value = new _NumValue(input.readNum(ModelType.INT), ModelType.INT);
+       break;
+     case ModelType.OBJECT:
+       int length = input.readNum(ModelType.INT);
+       var data = new LinkedHashMap&lt;String, ModelNode&gt;();
+       for (int i = 0; i &lt; length; i ++) {
+         var key = input.readUtf();
+         var value = new ModelNode();
+         value._readExternal(input);
+         data[key] = value;
+       }
+       _value = new _ObjectValue.from(data);
+       break;
+     case ModelType.PROPERTY:
+       var name = input.readUtf();
+       var value = new ModelNode();
+       value._readExternal(input);
+       _value = new _PropertyValue.nameValue(name, value);
+       break;
+     case ModelType.STRING:
+       _value = new _StringValue(input.readUtf());
+       break;
+     case ModelType.TYPE:
+       var t = new ModelType(new String.fromCharCode(input.readByte()));
+       _value = new _ModelTypeValue(t);
+       break;
+     default:
+       throw new StateError("Illegal type read: $type");
+   }
+ }
+
+ void _writeExternal(_DataOutput output) {
+   output.writeByte(type.id.codeUnitAt(0));
+   _value._writeExternal(output);
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="FAILURE_DESCRIPTION">
+<button class="show-code">Code</button>
+const <a href="http://api.dartlang.org/dart_core/String.html">String</a>         <strong>FAILURE_DESCRIPTION</strong> <a class="anchor-link"
+            href="#FAILURE_DESCRIPTION"
+            title="Permalink to ModelNode.FAILURE_DESCRIPTION">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String FAILURE_DESCRIPTION = "failure-description"
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MAX_INT">
+<button class="show-code">Code</button>
+const <a href="http://api.dartlang.org/dart_core/int.html">int</a>         <strong>MAX_INT</strong> <a class="anchor-link"
+            href="#MAX_INT"
+            title="Permalink to ModelNode.MAX_INT">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const int MAX_INT = 2147483647
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MIN_INT">
+<button class="show-code">Code</button>
+const <a href="http://api.dartlang.org/dart_core/int.html">int</a>         <strong>MIN_INT</strong> <a class="anchor-link"
+            href="#MIN_INT"
+            title="Permalink to ModelNode.MIN_INT">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const int MIN_INT = -2147483648
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="OUTCOME">
+<button class="show-code">Code</button>
+const <a href="http://api.dartlang.org/dart_core/String.html">String</a>         <strong>OUTCOME</strong> <a class="anchor-link"
+            href="#OUTCOME"
+            title="Permalink to ModelNode.OUTCOME">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String OUTCOME = "outcome"
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="SUCCESS">
+<button class="show-code">Code</button>
+const <a href="http://api.dartlang.org/dart_core/String.html">String</a>         <strong>SUCCESS</strong> <a class="anchor-link"
+            href="#SUCCESS"
+            title="Permalink to ModelNode.SUCCESS">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String SUCCESS = "success"
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Static Methods</h3>
+<div class="method"><h4 id="fromBase64">
+<button class="show-code">Code</button>
+dynamic <strong>fromBase64</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> encoded) <a class="anchor-link" href="#fromBase64"
+              title="Permalink to ModelNode.fromBase64">#</a></h4>
+<div class="doc">
+<pre class="source">
+static fromBase64(String encoded) {
+ // Smilla was here!
+ var node = new ModelNode();
+ node._readExternal(new _DataInput(_Base64.decode(encoded)));
+ return node;
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="ModelNode">
+<button class="show-code">Code</button>
+new <strong>ModelNode</strong>() <a class="anchor-link" href="#ModelNode"
+              title="Permalink to ModelNode.ModelNode">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelNode() {
+ _protect = false;
+ tags = new Map&lt;String, dynamic&gt;();
+ _value = new _UndefinedValue();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="ModelNode.from">
+<button class="show-code">Code</button>
+new <strong>ModelNode.from</strong>(<a href="../dmr/ModelValue.html">ModelValue</a> value) <a class="anchor-link" href="#ModelNode.from"
+              title="Permalink to ModelNode.ModelNode.from">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelNode.from(ModelValue value) {
+ _protect = false;
+ tags = new Map&lt;String, dynamic&gt;();
+ _value = value;
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="failure">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/bool.html">bool</a>         <strong>failure</strong> <a class="anchor-link"
+            href="#failure"
+            title="Permalink to ModelNode.failure">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get failure =&gt; hasDefined(OUTCOME) &amp;&amp; this[OUTCOME].asString() != SUCCESS;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="failureDescription">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/String.html">String</a>         <strong>failureDescription</strong> <a class="anchor-link"
+            href="#failureDescription"
+            title="Permalink to ModelNode.failureDescription">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get failureDescription =&gt; hasDefined(FAILURE_DESCRIPTION) ? this[FAILURE_DESCRIPTION].asString() : "No failure-description provided";
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="hashCode">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/int.html">int</a>         <strong>hashCode</strong> <a class="anchor-link"
+            href="#hashCode"
+            title="Permalink to ModelNode.hashCode">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Get a hash code for this object.</p>
+<p>All objects have hash codes. Hash codes are guaranteed to be the
+same for objects that are equal when compared using the equality
+operator <code>==</code>. Other than that there are no guarantees about
+the hash codes. They will not be consistent between runs and
+there are no distribution guarantees.</p>
+<p>If a subclass overrides <a class="crossref" href="../dmr/ModelNode.html#hashCode">hashCode</a> it should override the
+equality operator as well to maintain consistency.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html">Object</a> </div></div>
+<pre class="source">
+int get hashCode =&gt; _value.hashCode;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="keys">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/Iterable.html">Iterable</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html">String</a>&gt;         <strong>keys</strong> <a class="anchor-link"
+            href="#keys"
+            title="Permalink to ModelNode.keys">#</a>
+        </h4>
+        <div class="doc">
+<p>Get the set of keys contained in this object. Property node types always contain exactly one value with a key
+equal to the property name. Other non-object types will return an empty set.</p>
+<pre class="source">
+Iterable&lt;String&gt; get keys =&gt; _value.keys;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tags">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/Map.html">Map</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html">String</a>, dynamic&gt;         <strong>tags</strong> <a class="anchor-link"
+            href="#tags"
+            title="Permalink to ModelNode.tags">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Map&lt;String, dynamic&gt; tags
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="type">
+<button class="show-code">Code</button>
+final <a href="../dmr/ModelType.html">ModelType</a>         <strong>type</strong> <a class="anchor-link"
+            href="#type"
+            title="Permalink to ModelNode.type">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+ModelType get type =&gt; _value.type;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Operators</h3>
+<div class="method"><h4 id="[]">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>operator []</strong>(indexOrName) <a class="anchor-link" href="#[]"
+              title="Permalink to ModelNode.operator []">#</a></h4>
+<div class="doc">
+<p>Get the child of this node with the given 
+<span class="param">indexOrName</span>. If 
+<span class="param">indexOrName</span> is an int and the node is undefined,
+it will be initialized to be of type <a class="crossref" href="../dmr/ModelType.html#LIST">ModelType.LIST</a>. If 
+<span class="param">indexOrName</span> is a string and the node is undefined,
+it will be initialized to be of type <a class="crossref" href="../dmr/ModelType.html#OBJECT">ModelType.OBJECT</a>.</p>
+<p>When called on property values, the 
+<span class="param">indexOrName</span> must match the property name.</p>
+<p>Throws an <code>RangeError</code> if this node does not support getting a child with the given 
+<span class="param">indexOrName</span></p>
+<pre class="source">
+ModelNode operator [](indexOrName) {
+ if (indexOrName is int) {
+   if (_hasUndefinedValue()) {
+     _assertNotProtected();
+     _value = new _ListValue();
+   }
+   return _value[indexOrName];
+ } else if (indexOrName is String) {
+   if (_hasUndefinedValue()) {
+     _assertNotProtected();
+     _value = new _ObjectValue();
+   }
+   return _value[indexOrName];
+ }
+ throw new RangeError("Invalid index $indexOrName");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="[]=">
+<button class="show-code">Code</button>
+void <strong>operator []=</strong>(indexOrName, value) <a class="anchor-link" href="#[]="
+              title="Permalink to ModelNode.operator []=">#</a></h4>
+<div class="doc">
+<p>Operator which combines the <code>[]</code> operator with the <a class="crossref" href="../dmr/ModelNode.html#setValue">setValue</a> method.
+Shortcut for <code>node[indexOrName].setValue(value)</code></p>
+<pre class="source">
+void operator []=(indexOrName, value) =&gt; this[indexOrName].setValue(value);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="==">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>operator ==</strong>(other) <a class="anchor-link" href="#=="
+              title="Permalink to ModelNode.operator ==">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>The equality operator.</p>
+<p>The default behavior for all <code>Object</code>s is to return true if and
+only if <code>this</code> and 
+<span class="param">other</span> are the same object.</p>
+<p>If a subclass overrides the equality operator it should override
+the <a class="crossref" href="../dmr/ModelNode.html#hashCode">hashCode</a> method as well to maintain consistency.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html">Object</a> </div></div>
+<pre class="source">
+bool operator ==(other) {
+ if (identical(this, other)) {
+   return true;
+ }
+ else if (other is ModelNode) {
+   return _value == (other as ModelNode)._value;
+ }
+ return false;
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="add">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>add</strong>() <a class="anchor-link" href="#add"
+              title="Permalink to ModelNode.add">#</a></h4>
+<div class="doc">
+<p>Add a new node to the end of this node's value list. If the node is undefined, it will be initialized to be of
+type <a class="crossref" href="../dmr/ModelType.html#LIST">ModelType.LIST</a>. The new node is returned.</p>
+<pre class="source">
+ModelNode add() {
+ _assertNotProtected();
+ if (_hasUndefinedValue()) {
+   _value = new _ListValue();
+ }
+ return _value.add();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addEmptyList">
+<button class="show-code">Code</button>
+void <strong>addEmptyList</strong>() <a class="anchor-link" href="#addEmptyList"
+              title="Permalink to ModelNode.addEmptyList">#</a></h4>
+<div class="doc">
+<p>Add a node of type <a class="crossref" href="../dmr/ModelType.html#LIST">ModelType.LIST</a> to the end of this node's value list and return it. If this node is
+undefined, it will be initialized to be of type <a class="crossref" href="../dmr/ModelType.html#LIST">ModelType.LIST</a>.</p>
+<pre class="source">
+void addEmptyList() {
+ var node = add();
+ node.setEmptyList();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addEmptyObject">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>addEmptyObject</strong>() <a class="anchor-link" href="#addEmptyObject"
+              title="Permalink to ModelNode.addEmptyObject">#</a></h4>
+<div class="doc">
+<p>Add a node of type <a class="crossref" href="../dmr/ModelType.html#OBJECT">ModelType.OBJECT</a> to the end of this node's value list and return it. If this node is
+undefined, it will be initialized to be of type <a class="crossref" href="../dmr/ModelType.html#LIST">ModelType.LIST</a>.</p>
+<pre class="source">
+ModelNode addEmptyObject() {
+ var node = add();
+ node.setEmptyObject();
+ return node;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addExpression">
+<button class="show-code">Code</button>
+void <strong>addExpression</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> expression) <a class="anchor-link" href="#addExpression"
+              title="Permalink to ModelNode.addExpression">#</a></h4>
+<div class="doc">
+<p>Add a new node by calling <a class="crossref" href="../dmr/ModelNode.html#add">add</a> and then set the specified 
+<span class="param">expression</span>.
+Convenience method for: <code>add().setExpression(expression);</code></p>
+<pre class="source">
+void addExpression(String expression) =&gt; add().setExpression(expression);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addProperty">
+<button class="show-code">Code</button>
+void <strong>addProperty</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> name, value) <a class="anchor-link" href="#addProperty"
+              title="Permalink to ModelNode.addProperty">#</a></h4>
+<div class="doc">
+<p>Add a new node by calling <a class="crossref" href="../dmr/ModelNode.html#add">add</a> and then set the specified property on it.
+Convenience method for: <code>add().setProperty(name, value)</code></p>
+<pre class="source">
+void addProperty(String name, value) =&gt; add().setProperty(name, value);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addValue">
+<button class="show-code">Code</button>
+void <strong>addValue</strong>(value) <a class="anchor-link" href="#addValue"
+              title="Permalink to ModelNode.addValue">#</a></h4>
+<div class="doc">
+<p>Add a new node by calling <a class="crossref" href="../dmr/ModelNode.html#add">add</a> and call <code>assign</code> on it with the specified 
+<span class="param">value</span>.
+Convenience method for: <code>add().set(value)</code></p>
+<pre class="source">
+void addValue(value) =&gt; add().setValue(value);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asBool">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>asBool</strong>([<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> onError(<a href="../dmr/ModelValue.html">ModelValue</a> value)]) <a class="anchor-link" href="#asBool"
+              title="Permalink to ModelNode.asBool">#</a></h4>
+<div class="doc">
+<p>Get the value of this node as an <code>bool</code>. Collection types return <code>true</code> for non-empty
+collections. Numerical types return <code>true</code> for non-zero values.</p>
+<p>If no conversion is possible, the 
+<span class="param">onError</span> is called with the <code>value</code> as argument, and its return
+value is used instead. If no 
+<span class="param">onError</span> is provided, a <code>FormatException</code> is thrown.</p>
+<pre class="source">
+bool asBool([bool onError(ModelValue value)]) =&gt; _value.asBool(onError);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asBytes">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/List.html">List</a>&lt;<a href="http://api.dartlang.org/dart_core/int.html">int</a>&gt; <strong>asBytes</strong>() <a class="anchor-link" href="#asBytes"
+              title="Permalink to ModelNode.asBytes">#</a></h4>
+<div class="doc">
+<p>Get the value of this node as a byte array.  Strings and string-like values will return
+the UTF-8 encoding of the string.  Numerical values will return the byte representation of the
+number.</p>
+<pre class="source">
+List&lt;int&gt; asBytes() =&gt; _value.asBytes();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asList">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/List.html">List</a>&lt;<a href="../dmr/ModelNode.html">ModelNode</a>&gt; <strong>asList</strong>() <a class="anchor-link" href="#asList"
+              title="Permalink to ModelNode.asList">#</a></h4>
+<div class="doc">
+<p>Get the list of entries contained in this object. Property node types always contain exactly one entry (itself).
+Lists will return an unmodifiable view of their contained list. Objects will return a list of properties corresponding
+to the mappings within the object. Other types will return an empty list.</p>
+<pre class="source">
+List&lt;ModelNode&gt; asList() =&gt; _value.asList();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asNum">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/num.html">num</a> <strong>asNum</strong>([<a href="http://api.dartlang.org/dart_core/num.html">num</a> onError(<a href="../dmr/ModelValue.html">ModelValue</a> value)]) <a class="anchor-link" href="#asNum"
+              title="Permalink to ModelNode.asNum">#</a></h4>
+<div class="doc">
+<p>Get the value of this node as an <code>num</code>. Collection types will return the size
+of the collection for this value.  Other types may attempt a string conversion.</p>
+<p>If no conversion is possible, the 
+<span class="param">onError</span> is called with the <code>value</code> as argument, and its return
+value is used instead. If no 
+<span class="param">onError</span> is provided, a <code>FormatException</code> is thrown.</p>
+<pre class="source">
+num asNum([num onError(ModelValue value)]) =&gt; _value.asNum(onError);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asObject">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>asObject</strong>() <a class="anchor-link" href="#asObject"
+              title="Permalink to ModelNode.asObject">#</a></h4>
+<div class="doc">
+<p>Get a copy of this value as an object. Object values will simply copy themselves as by the <a class="crossref" href="../dmr/ModelNode.html#clone">clone</a> method.
+Property values will return a single-entry object whose key and value are copied from the property key and value.
+List values will attempt to interpolate the list into an object by iterating each item, mapping each property
+into an object entry and otherwise taking pairs of list entries, converting the first to a string, and using the
+pair of entries as a single object entry.  If an object key appears more than once in the source object, the last
+key takes precedence.</p>
+<p>Throws a <code>FormatException</code> if no conversion is possible.</p>
+<pre class="source">
+ModelNode asObject() =&gt; _value.asObject();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asProperty">
+<button class="show-code">Code</button>
+<a href="../dmr/Property.html">Property</a> <strong>asProperty</strong>() <a class="anchor-link" href="#asProperty"
+              title="Permalink to ModelNode.asProperty">#</a></h4>
+<div class="doc">
+<p>Get the value of this node as a property. Object values will return a property if there is exactly one
+property in the object. List values will return a property if there are exactly two items in the list,
+and if the first is convertible to a string.</p>
+<p>Throws a <code>FormatException</code> if no conversion is possible.</p>
+<pre class="source">
+Property asProperty() =&gt; _value.asProperty();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asPropertyList">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/List.html">List</a>&lt;<a href="../dmr/Property.html">Property</a>&gt; <strong>asPropertyList</strong>() <a class="anchor-link" href="#asPropertyList"
+              title="Permalink to ModelNode.asPropertyList">#</a></h4>
+<div class="doc">
+<p>Get the value of this node as a property list. Object values will return a list of properties representing
+each key-value pair in the object. List values will return all the values of the list, failing if any of the
+values are not convertible to a property value.</p>
+<p>Throws a <code>FormatException</code> if no conversion is possible.</p>
+<pre class="source">
+List&lt;Property&gt; asPropertyList() =&gt; _value.asPropertyList();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asString">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>asString</strong>() <a class="anchor-link" href="#asString"
+              title="Permalink to ModelNode.asString">#</a></h4>
+<div class="doc">
+<p>Get the value as a string. This is the literal value of this model node. More than one node type may
+yield the same value for this method.</p>
+<pre class="source">
+String asString() =&gt; _value.asString();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asType">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelType.html">ModelType</a> <strong>asType</strong>() <a class="anchor-link" href="#asType"
+              title="Permalink to ModelNode.asType">#</a></h4>
+<div class="doc">
+<p>Get the value of this node as a type, expressed using the {@code ModelType} enum. The string
+value of this node must be convertible to a type.</p>
+<p>Throws a <code>FormatException</code> if no conversion is possible.</p>
+<pre class="source">
+ModelType asType() =&gt; _value.asType();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clear">
+<button class="show-code">Code</button>
+void <strong>clear</strong>() <a class="anchor-link" href="#clear"
+              title="Permalink to ModelNode.clear">#</a></h4>
+<div class="doc">
+<p>Clear this nodes value and change its type to <a class="crossref" href="../dmr/ModelType.html#UNDEFINED">ModelType.UNDEFINED</a>.</p>
+<pre class="source">
+void clear() {
+ _assertNotProtected();
+ _value = new _UndefinedValue();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clone">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>clone</strong>() <a class="anchor-link" href="#clone"
+              title="Permalink to ModelNode.clone">#</a></h4>
+<div class="doc">
+<p>Clones this model node.</p>
+<pre class="source">
+ModelNode clone() =&gt; new ModelNode.from(_value.copy());
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="has">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>has</strong>(indexOrName) <a class="anchor-link" href="#has"
+              title="Permalink to ModelNode.has">#</a></h4>
+<div class="doc">
+<p>Determine whether this node has a child with the given index or name. Property node types always contain exactly one
+value with a key equal to the property name.</p>
+<pre class="source">
+bool has(indexOrName) =&gt; _value.has(indexOrName);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="hasDefined">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>hasDefined</strong>(indexOrName) <a class="anchor-link" href="#hasDefined"
+              title="Permalink to ModelNode.hasDefined">#</a></h4>
+<div class="doc">
+<p>Determine whether this node has a defined child with the given index or name. Property node types always contain
+exactly one value with a key equal to the property name..</p>
+<pre class="source">
+bool hasDefined(indexOrName) =&gt; _value.has(indexOrName) &amp;&amp; _value[indexOrName].isDefined();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isDefined">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>isDefined</strong>() <a class="anchor-link" href="#isDefined"
+              title="Permalink to ModelNode.isDefined">#</a></h4>
+<div class="doc">
+<p>Determine whether this node is defined. Equivalent to the expression: <code>type != ModelType.UNDEFINED</code></p>
+<pre class="source">
+bool isDefined() =&gt; type != ModelType.UNDEFINED;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="protect">
+<button class="show-code">Code</button>
+void <strong>protect</strong>() <a class="anchor-link" href="#protect"
+              title="Permalink to ModelNode.protect">#</a></h4>
+<div class="doc">
+<p>Prevent further modifications to this node and its sub-nodes.  Note that copies
+of this node made after this method call will not be protected.</p>
+<pre class="source">
+void protect() {
+ if (!_protect) {
+   _protect = true;
+   _value.protect();
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+void <strong>remove</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> name) <a class="anchor-link" href="#remove"
+              title="Permalink to ModelNode.remove">#</a></h4>
+<div class="doc">
+<p>Remove a child of this node, returning the child.  If no such child exists, an exception is thrown.</p>
+<pre class="source">
+void remove(String name) =&gt; _value.remove(name);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="require">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>require</strong>(indexOrName) <a class="anchor-link" href="#require"
+              title="Permalink to ModelNode.require">#</a></h4>
+<div class="doc">
+<p>Require the existence of a child of this node with the given index or name, returning the child. If no such
+child exists, an exception is thrown.</p>
+<p>When called on property values, the name must match the property name.</p>
+<pre class="source">
+ModelNode require(indexOrName) =&gt; _value.require(indexOrName);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="resolve">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>resolve</strong>() <a class="anchor-link" href="#resolve"
+              title="Permalink to ModelNode.resolve">#</a></h4>
+<div class="doc">
+<p>Return a copy of this model node, with all system property expressions locally resolved. The caller must have
+permission to access all of the system properties named in the node tree.</p>
+<pre class="source">
+ModelNode resolve() =&gt; new ModelNode()..resolve();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setEmptyList">
+<button class="show-code">Code</button>
+void <strong>setEmptyList</strong>() <a class="anchor-link" href="#setEmptyList"
+              title="Permalink to ModelNode.setEmptyList">#</a></h4>
+<div class="doc">
+<p>Change this node's value to an empty list.</p>
+<pre class="source">
+void setEmptyList() {
+ _assertNotProtected();
+ _value = new _ListValue();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setEmptyObject">
+<button class="show-code">Code</button>
+void <strong>setEmptyObject</strong>() <a class="anchor-link" href="#setEmptyObject"
+              title="Permalink to ModelNode.setEmptyObject">#</a></h4>
+<div class="doc">
+<p>Change this node's value to an empty object.</p>
+<pre class="source">
+void setEmptyObject() {
+ _assertNotProtected();
+ _value = new _ObjectValue();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setExpression">
+<button class="show-code">Code</button>
+void <strong>setExpression</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> expression) <a class="anchor-link" href="#setExpression"
+              title="Permalink to ModelNode.setExpression">#</a></h4>
+<div class="doc">
+<p>Change this node's value to the given expression value.</p>
+<pre class="source">
+void setExpression(String expression) {
+ if (expression == null) {
+   throw new ArgumentError("Value must not be null");
+ }
+ _assertNotProtected();
+ _value = new _ExpressionValue(expression);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setProperty">
+<button class="show-code">Code</button>
+void <strong>setProperty</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> name, value) <a class="anchor-link" href="#setProperty"
+              title="Permalink to ModelNode.setProperty">#</a></h4>
+<div class="doc">
+<p>Change this node's value to a property with the given name and value.</p>
+<pre class="source">
+void setProperty(String name, value) {
+ if (name == null) {
+   throw new ArgumentError("Name must not be null");
+ }
+ if (value == null) {
+   throw new ArgumentError("Value must not be null");
+ }
+ _assertNotProtected();
+ if (value is num || value is bool || value is String || value is Property) {
+   var node = new ModelNode()..setValue(value);
+   _value = new _PropertyValue.nameValue(name, node);
+ } else if (value is ModelNode) {
+   _value = new _PropertyValue.nameValue(name, value);
+ }
+ else if (value is List &amp;&amp; !(value as List).isEmpty &amp;&amp; (value as List)[0] is int) {
+   // we have a 'byte' array
+   var node = new ModelNode()..setValue(value);
+   _value = new _PropertyValue.nameValue(name, node);
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setPropertyExpression">
+<button class="show-code">Code</button>
+void <strong>setPropertyExpression</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> name, <a href="http://api.dartlang.org/dart_core/String.html">String</a> value) <a class="anchor-link" href="#setPropertyExpression"
+              title="Permalink to ModelNode.setPropertyExpression">#</a></h4>
+<div class="doc">
+<p>Change this node's value to a property with the given name and expression value.</p>
+<pre class="source">
+void setPropertyExpression(String name, String value) {
+ _assertNotProtected();
+ var node = new ModelNode()..setExpression(value);
+ _value = new _PropertyValue.nameValue(name, node);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setValue">
+<button class="show-code">Code</button>
+void <strong>setValue</strong>(value) <a class="anchor-link" href="#setValue"
+              title="Permalink to ModelNode.setValue">#</a></h4>
+<div class="doc">
+<p>Change this node's value to the given value. If 
+<span class="param">value</span> is a <a class="crossref" href="../dmr/ModelNode.html#ModelNode">ModelNode</a> or a list of <a class="crossref" href="../dmr/ModelNode.html#ModelNode">ModelNode</a>s, the value(s)
+are copied.</p>
+<pre class="source">
+void setValue(value) {
+ if (value == null) {
+   throw new ArgumentError("Value must not be null");
+ }
+ _assertNotProtected();
+ if (value is int) {
+   if (value &lt; MIN_INT || value &gt; MAX_INT) {
+     _value = new _NumValue(value, ModelType.LONG);
+   } else {
+     _value = new _NumValue(value, ModelType.INT);
+   }
+ } else if (value is double) {
+   _value = new _NumValue(value, ModelType.DOUBLE);
+ } else if (value is bool) {
+   _value = new _BooleanValue(value);
+ } else if (value is String) {
+   _value = new _StringValue(value);
+ } else if (value is Property) {
+   _value = new _PropertyValue(value);
+ } else if (value is ModelType) {
+   _value = new _ModelTypeValue(value);
+ } else if (value is ModelNode) {
+   _value = (value as ModelNode)._value.copy();
+ } else if (value is List &amp;&amp; !(value as List).isEmpty) {
+   var elem = (value as List)[0];
+   if (elem is int) {
+     // we have a 'byte' array
+     _value = new _BytesValue(value);
+   } else if (elem is ModelNode) {
+     // we have a list of ModelNode
+     var newList = new List&lt;ModelNode&gt;();
+     (value as List&lt;ModelNode&gt;).forEach((node) {
+       if (node == null) {
+         newList.add(new ModelNode());
+       } else {
+         newList.add(node.clone());
+       }
+     });
+     _value = new _ListValue.from(newList);
+   }
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toBase64">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>toBase64</strong>() <a class="anchor-link" href="#toBase64"
+              title="Permalink to ModelNode.toBase64">#</a></h4>
+<div class="doc">
+<pre class="source">
+String toBase64() {
+ var output = new _DataOutput();
+ _writeExternal(output);
+ return _Base64.encode(output.bytes);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toJson">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>toJson</strong>() <a class="anchor-link" href="#toJson"
+              title="Permalink to ModelNode.toJson">#</a></h4>
+<div class="doc">
+<pre class="source">
+String toJson() =&gt; _value.toJson();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to ModelNode.toString">#</a></h4>
+<div class="doc">
+<p>Get a human-readable string representation of this model node, formatted nicely (possibly on multiple lines).</p>
+<pre class="source">
+String toString() =&gt; _value.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

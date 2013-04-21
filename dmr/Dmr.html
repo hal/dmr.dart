@@ -1,0 +1,160 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Dmr class / dmr Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="dmr" data-type="Dmr">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../dmr.html">dmr</a> &rsaquo; <a href="../dmr/Dmr.html">Dmr</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Dmr</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Class to send requests against the management interface of a running JBoss 
+instance. An instance of this class is connected to a management endpoint 
+and can be reused for any number requests. </p>
+<p>To send a request use the <a class="crossref" href="../dmr/Dmr.html#send">send</a> method and provide a <a class="crossref" href="../dmr/ModelNode.html">ModelNode</a> which 
+must contain the operation together with all necessary attributes. See
+<a href="https://docs.jboss.org/author/display/AS72/Management+API+reference">the JBoss wiki</a> for
+more infos.</p>
+<pre class="source">
+class Dmr {
+
+ final String managementUrl;
+
+ const Dmr(this.managementUrl);
+
+ Future&lt;ModelNode&gt; send(ModelNode operation) {
+   var completer = new Completer&lt;ModelNode&gt;();
+   var httpRequest = new HttpRequest();
+
+   httpRequest.open("POST", managementUrl);
+   httpRequest.setRequestHeader("Content-type","application/dmr-encoded");
+   httpRequest.setRequestHeader("Accept","application/dmr-encoded");
+   httpRequest.withCredentials = true;
+   httpRequest.onLoadEnd.listen((e) {
+     if (httpRequest.status == 200) {
+       try {
+         var node = ModelNode.fromBase64(httpRequest.responseText);
+         completer.complete(node);
+       } catch (e) {
+         completer.completeError(new DmrException("Error parsing DMR response: $e"));
+       }
+     } else if (httpRequest.status == 401) {
+       completer.completeError(new DmrException("Authentication required."));
+     } else if (httpRequest.status == 503) {
+       completer.completeError(new DmrException("Service temporarily unavailable. Is the server is still booting?"));
+     } else if (httpRequest.status == 0) {
+       completer.completeError(new DmrException("Unable to connect. Server running?"));
+     } else {
+     completer.completeError(new DmrException("Unknown error: ${httpRequest.status} - ${httpRequest.statusText}"));
+     }
+   });
+   httpRequest.send(operation.toBase64());
+
+   return completer.future;
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="Dmr">
+<button class="show-code">Code</button>
+const <strong>Dmr</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> managementUrl) <a class="anchor-link" href="#Dmr"
+              title="Permalink to Dmr.Dmr">#</a></h4>
+<div class="doc">
+<pre class="source">
+const Dmr(this.managementUrl);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="managementUrl">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/String.html">String</a>         <strong>managementUrl</strong> <a class="anchor-link"
+            href="#managementUrl"
+            title="Permalink to Dmr.managementUrl">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final String managementUrl
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="send">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_async/Future.html">Future</a>&lt;<a href="../dmr/ModelNode.html">ModelNode</a>&gt; <strong>send</strong>(<a href="../dmr/ModelNode.html">ModelNode</a> operation) <a class="anchor-link" href="#send"
+              title="Permalink to Dmr.send">#</a></h4>
+<div class="doc">
+<pre class="source">
+Future&lt;ModelNode&gt; send(ModelNode operation) {
+ var completer = new Completer&lt;ModelNode&gt;();
+ var httpRequest = new HttpRequest();
+
+ httpRequest.open("POST", managementUrl);
+ httpRequest.setRequestHeader("Content-type","application/dmr-encoded");
+ httpRequest.setRequestHeader("Accept","application/dmr-encoded");
+ httpRequest.withCredentials = true;
+ httpRequest.onLoadEnd.listen((e) {
+   if (httpRequest.status == 200) {
+     try {
+       var node = ModelNode.fromBase64(httpRequest.responseText);
+       completer.complete(node);
+     } catch (e) {
+       completer.completeError(new DmrException("Error parsing DMR response: $e"));
+     }
+   } else if (httpRequest.status == 401) {
+     completer.completeError(new DmrException("Authentication required."));
+   } else if (httpRequest.status == 503) {
+     completer.completeError(new DmrException("Service temporarily unavailable. Is the server is still booting?"));
+   } else if (httpRequest.status == 0) {
+     completer.completeError(new DmrException("Unable to connect. Server running?"));
+   } else {
+   completer.completeError(new DmrException("Unknown error: ${httpRequest.status} - ${httpRequest.statusText}"));
+   }
+ });
+ httpRequest.send(operation.toBase64());
+
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

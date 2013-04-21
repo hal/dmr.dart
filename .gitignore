@@ -1,9 +1,0 @@
-.DS_Store
-.idea
-out
-packages
-pubspec.lock
-*.iml
-*.dart.js
-*.dart.js.deps
-*.dart.js.map

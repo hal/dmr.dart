@@ -1,0 +1,447 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ModelValue abstract class / dmr Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="dmr" data-type="ModelValue">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../dmr.html">dmr</a> &rsaquo; <a href="../dmr/ModelValue.html">ModelValue</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ModelValue</strong>
+          abstract class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+abstract class ModelValue {
+
+ final ModelType type;
+
+ const ModelValue(this.type);
+
+ num asNum([num onError(ModelValue value)]) {
+   throw new UnsupportedError("asNum() is not supported in $runtimeType");
+ }
+
+ bool asBool([bool onError(ModelValue value)]) {
+   throw new UnsupportedError("asBool() is not supported in $runtimeType");
+ }
+
+ String asString();
+
+ List&lt;int&gt; asBytes() {
+   throw new UnsupportedError("asBytes() is not supported in $runtimeType");
+ }
+
+ Property asProperty() {
+   throw new UnsupportedError("asProperty() is not supported in $runtimeType");
+ }
+
+ List&lt;Property&gt; asPropertyList() {
+   throw new UnsupportedError("asPropertyList() is not supported in $runtimeType");
+ }
+
+ ModelNode asObject() {
+   throw new UnsupportedError("asObject() is not supported in $runtimeType");
+ }
+
+ List&lt;ModelNode&gt; asList() {
+   throw new UnsupportedError("asList() is not supported in $runtimeType");
+ }
+
+ ModelType asType() {
+   throw new UnsupportedError("asType() is not supported in $runtimeType");
+ }
+
+ ModelNode operator [](indexOrKey) {
+   throw new RangeError.value(indexOrKey);
+ }
+
+ bool has(indexOrKey) =&gt; false;
+
+ ModelNode require(indexOrKey) {
+   throw new RangeError.value(indexOrKey);
+ }
+
+ ModelNode add() {
+   throw new UnsupportedError("add() is not supported in $runtimeType");
+ }
+
+ void remove(String key) {
+   throw new UnsupportedError("remove() is not supported in $runtimeType");
+ }
+
+ Iterable&lt;String&gt; get keys {
+   throw new UnsupportedError("keys() is not supported in $runtimeType");
+ }
+
+ void protect() {
+   // nop
+ }
+
+ ModelValue copy() =&gt; this;
+
+ ModelValue resolve() =&gt; copy();
+
+ bool operator ==(other);
+
+ int get hashCode;
+
+ void _indent(StringBuffer buffer, int count) =&gt; buffer.writeAll(new List.filled(count, "    "));
+
+ void _format(StringBuffer buffer, bool json, [int indent = 0]) =&gt; buffer.write(asString());
+
+ String toString() {
+   final StringBuffer buffer = new StringBuffer();
+   _format(buffer, false);
+   return buffer.toString();
+ }
+
+ String toJson() {
+   final StringBuffer buffer = new StringBuffer();
+   _format(buffer, true);
+   return buffer.toString();
+ }
+
+ void _writeExternal(_DataOutput output) {
+   // nothing by default
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="ModelValue">
+<button class="show-code">Code</button>
+const <strong>ModelValue</strong>(<a href="../dmr/ModelType.html">ModelType</a> type) <a class="anchor-link" href="#ModelValue"
+              title="Permalink to ModelValue.ModelValue">#</a></h4>
+<div class="doc">
+<pre class="source">
+const ModelValue(this.type);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="hashCode">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/int.html">int</a>         <strong>hashCode</strong> <a class="anchor-link"
+            href="#hashCode"
+            title="Permalink to ModelValue.hashCode">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Get a hash code for this object.</p>
+<p>All objects have hash codes. Hash codes are guaranteed to be the
+same for objects that are equal when compared using the equality
+operator <code>==</code>. Other than that there are no guarantees about
+the hash codes. They will not be consistent between runs and
+there are no distribution guarantees.</p>
+<p>If a subclass overrides <a class="crossref" href="../dmr/ModelValue.html#hashCode">hashCode</a> it should override the
+equality operator as well to maintain consistency.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html">Object</a> </div></div>
+<pre class="source">
+int get hashCode;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="keys">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/Iterable.html">Iterable</a>&lt;<a href="http://api.dartlang.org/dart_core/String.html">String</a>&gt;         <strong>keys</strong> <a class="anchor-link"
+            href="#keys"
+            title="Permalink to ModelValue.keys">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Iterable&lt;String&gt; get keys {
+ throw new UnsupportedError("keys() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="type">
+<button class="show-code">Code</button>
+final <a href="../dmr/ModelType.html">ModelType</a>         <strong>type</strong> <a class="anchor-link"
+            href="#type"
+            title="Permalink to ModelValue.type">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final ModelType type
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Operators</h3>
+<div class="method"><h4 id="[]">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>operator []</strong>(indexOrKey) <a class="anchor-link" href="#[]"
+              title="Permalink to ModelValue.operator []">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelNode operator [](indexOrKey) {
+ throw new RangeError.value(indexOrKey);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="==">
+abstract <a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>operator ==</strong>(other) <a class="anchor-link" href="#=="
+              title="Permalink to ModelValue.operator ==">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>The equality operator.</p>
+<p>The default behavior for all <code>Object</code>s is to return true if and
+only if <code>this</code> and 
+<span class="param">other</span> are the same object.</p>
+<p>If a subclass overrides the equality operator it should override
+the <a class="crossref" href="../dmr/ModelValue.html#hashCode">hashCode</a> method as well to maintain consistency.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html">Object</a> </div></div>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="add">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>add</strong>() <a class="anchor-link" href="#add"
+              title="Permalink to ModelValue.add">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelNode add() {
+ throw new UnsupportedError("add() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asBool">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>asBool</strong>([<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> onError(<a href="../dmr/ModelValue.html">ModelValue</a> value)]) <a class="anchor-link" href="#asBool"
+              title="Permalink to ModelValue.asBool">#</a></h4>
+<div class="doc">
+<pre class="source">
+bool asBool([bool onError(ModelValue value)]) {
+ throw new UnsupportedError("asBool() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asBytes">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/List.html">List</a>&lt;<a href="http://api.dartlang.org/dart_core/int.html">int</a>&gt; <strong>asBytes</strong>() <a class="anchor-link" href="#asBytes"
+              title="Permalink to ModelValue.asBytes">#</a></h4>
+<div class="doc">
+<pre class="source">
+List&lt;int&gt; asBytes() {
+ throw new UnsupportedError("asBytes() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asList">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/List.html">List</a>&lt;<a href="../dmr/ModelNode.html">ModelNode</a>&gt; <strong>asList</strong>() <a class="anchor-link" href="#asList"
+              title="Permalink to ModelValue.asList">#</a></h4>
+<div class="doc">
+<pre class="source">
+List&lt;ModelNode&gt; asList() {
+ throw new UnsupportedError("asList() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asNum">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/num.html">num</a> <strong>asNum</strong>([<a href="http://api.dartlang.org/dart_core/num.html">num</a> onError(<a href="../dmr/ModelValue.html">ModelValue</a> value)]) <a class="anchor-link" href="#asNum"
+              title="Permalink to ModelValue.asNum">#</a></h4>
+<div class="doc">
+<pre class="source">
+num asNum([num onError(ModelValue value)]) {
+ throw new UnsupportedError("asNum() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asObject">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>asObject</strong>() <a class="anchor-link" href="#asObject"
+              title="Permalink to ModelValue.asObject">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelNode asObject() {
+ throw new UnsupportedError("asObject() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asProperty">
+<button class="show-code">Code</button>
+<a href="../dmr/Property.html">Property</a> <strong>asProperty</strong>() <a class="anchor-link" href="#asProperty"
+              title="Permalink to ModelValue.asProperty">#</a></h4>
+<div class="doc">
+<pre class="source">
+Property asProperty() {
+ throw new UnsupportedError("asProperty() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asPropertyList">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/List.html">List</a>&lt;<a href="../dmr/Property.html">Property</a>&gt; <strong>asPropertyList</strong>() <a class="anchor-link" href="#asPropertyList"
+              title="Permalink to ModelValue.asPropertyList">#</a></h4>
+<div class="doc">
+<pre class="source">
+List&lt;Property&gt; asPropertyList() {
+ throw new UnsupportedError("asPropertyList() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asString">
+abstract <a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>asString</strong>() <a class="anchor-link" href="#asString"
+              title="Permalink to ModelValue.asString">#</a></h4>
+<div class="doc">
+</div>
+</div>
+<div class="method"><h4 id="asType">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelType.html">ModelType</a> <strong>asType</strong>() <a class="anchor-link" href="#asType"
+              title="Permalink to ModelValue.asType">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelType asType() {
+ throw new UnsupportedError("asType() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="copy">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelValue.html">ModelValue</a> <strong>copy</strong>() <a class="anchor-link" href="#copy"
+              title="Permalink to ModelValue.copy">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelValue copy() =&gt; this;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="has">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/bool.html">bool</a> <strong>has</strong>(indexOrKey) <a class="anchor-link" href="#has"
+              title="Permalink to ModelValue.has">#</a></h4>
+<div class="doc">
+<pre class="source">
+bool has(indexOrKey) =&gt; false;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="protect">
+<button class="show-code">Code</button>
+void <strong>protect</strong>() <a class="anchor-link" href="#protect"
+              title="Permalink to ModelValue.protect">#</a></h4>
+<div class="doc">
+<pre class="source">
+void protect() {
+ // nop
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+void <strong>remove</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> key) <a class="anchor-link" href="#remove"
+              title="Permalink to ModelValue.remove">#</a></h4>
+<div class="doc">
+<pre class="source">
+void remove(String key) {
+ throw new UnsupportedError("remove() is not supported in $runtimeType");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="require">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelNode.html">ModelNode</a> <strong>require</strong>(indexOrKey) <a class="anchor-link" href="#require"
+              title="Permalink to ModelValue.require">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelNode require(indexOrKey) {
+ throw new RangeError.value(indexOrKey);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="resolve">
+<button class="show-code">Code</button>
+<a href="../dmr/ModelValue.html">ModelValue</a> <strong>resolve</strong>() <a class="anchor-link" href="#resolve"
+              title="Permalink to ModelValue.resolve">#</a></h4>
+<div class="doc">
+<pre class="source">
+ModelValue resolve() =&gt; copy();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toJson">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>toJson</strong>() <a class="anchor-link" href="#toJson"
+              title="Permalink to ModelValue.toJson">#</a></h4>
+<div class="doc">
+<pre class="source">
+String toJson() {
+ final StringBuffer buffer = new StringBuffer();
+ _format(buffer, true);
+ return buffer.toString();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to ModelValue.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html">Object</a> </div></div>
+<pre class="source">
+String toString() {
+ final StringBuffer buffer = new StringBuffer();
+ _format(buffer, false);
+ return buffer.toString();
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

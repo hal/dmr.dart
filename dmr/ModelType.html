@@ -1,0 +1,323 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ModelType class / dmr Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="dmr" data-type="ModelType">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../dmr.html">dmr</a> &rsaquo; <a href="../dmr/ModelType.html">ModelType</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ModelType</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ModelType {
+
+ static const BIG_DECIMAL = const ModelType._internal("d", "BIG_DECIMAL");
+ static const BIG_INTEGER = const ModelType._internal("i", "BIG_INTEGER");
+ static const BOOLEAN = const ModelType._internal("Z", "BOOLEAN");
+ static const BYTES = const ModelType._internal("b", "BYTES");
+ static const DOUBLE = const ModelType._internal("D", "DOUBLE");
+ static const EXPRESSION = const ModelType._internal("e", "EXPRESSION");
+ static const INT = const ModelType._internal("I", "INT");
+ static const LIST = const ModelType._internal("l", "LIST");
+ static const LONG = const ModelType._internal("J", "LONG");
+ static const OBJECT = const ModelType._internal("o", "OBJECT");
+ static const PROPERTY = const ModelType._internal("p", "PROPERTY");
+ static const STRING = const ModelType._internal("s", "STRING"); // also S for long string
+ static const TYPE = const ModelType._internal("t", "TYPE");
+ static const UNDEFINED = const ModelType._internal("u", "UNDEFINED");
+
+ final String _id;
+ final String _name;
+
+ const ModelType._internal(this._id, this._name);
+
+ factory ModelType(String type) {
+   switch (type) {
+     case "d": return BIG_DECIMAL;
+     case "i": return BIG_INTEGER;
+     case "Z": return BOOLEAN;
+     case "b": return BYTES;
+     case "D": return DOUBLE;
+     case "e": return EXPRESSION;
+     case "I": return INT;
+     case "l": return LIST;
+     case "J": return LONG;
+     case "o": return OBJECT;
+     case "p": return PROPERTY;
+     case "s": return STRING;
+     case "t": return TYPE;
+     default: return UNDEFINED;
+   }
+ }
+
+ String toString() =&gt; _name;
+
+ String get id =&gt; _id;
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="BIG_DECIMAL">
+<button class="show-code">Code</button>
+const         <strong>BIG_DECIMAL</strong> <a class="anchor-link"
+            href="#BIG_DECIMAL"
+            title="Permalink to ModelType.BIG_DECIMAL">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const BIG_DECIMAL = const ModelType._internal("d", "BIG_DECIMAL")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="BIG_INTEGER">
+<button class="show-code">Code</button>
+const         <strong>BIG_INTEGER</strong> <a class="anchor-link"
+            href="#BIG_INTEGER"
+            title="Permalink to ModelType.BIG_INTEGER">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const BIG_INTEGER = const ModelType._internal("i", "BIG_INTEGER")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="BOOLEAN">
+<button class="show-code">Code</button>
+const         <strong>BOOLEAN</strong> <a class="anchor-link"
+            href="#BOOLEAN"
+            title="Permalink to ModelType.BOOLEAN">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const BOOLEAN = const ModelType._internal("Z", "BOOLEAN")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="BYTES">
+<button class="show-code">Code</button>
+const         <strong>BYTES</strong> <a class="anchor-link"
+            href="#BYTES"
+            title="Permalink to ModelType.BYTES">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const BYTES = const ModelType._internal("b", "BYTES")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="DOUBLE">
+<button class="show-code">Code</button>
+const         <strong>DOUBLE</strong> <a class="anchor-link"
+            href="#DOUBLE"
+            title="Permalink to ModelType.DOUBLE">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const DOUBLE = const ModelType._internal("D", "DOUBLE")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="EXPRESSION">
+<button class="show-code">Code</button>
+const         <strong>EXPRESSION</strong> <a class="anchor-link"
+            href="#EXPRESSION"
+            title="Permalink to ModelType.EXPRESSION">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const EXPRESSION = const ModelType._internal("e", "EXPRESSION")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="INT">
+<button class="show-code">Code</button>
+const         <strong>INT</strong> <a class="anchor-link"
+            href="#INT"
+            title="Permalink to ModelType.INT">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const INT = const ModelType._internal("I", "INT")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="LIST">
+<button class="show-code">Code</button>
+const         <strong>LIST</strong> <a class="anchor-link"
+            href="#LIST"
+            title="Permalink to ModelType.LIST">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const LIST = const ModelType._internal("l", "LIST")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="LONG">
+<button class="show-code">Code</button>
+const         <strong>LONG</strong> <a class="anchor-link"
+            href="#LONG"
+            title="Permalink to ModelType.LONG">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const LONG = const ModelType._internal("J", "LONG")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="OBJECT">
+<button class="show-code">Code</button>
+const         <strong>OBJECT</strong> <a class="anchor-link"
+            href="#OBJECT"
+            title="Permalink to ModelType.OBJECT">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const OBJECT = const ModelType._internal("o", "OBJECT")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="PROPERTY">
+<button class="show-code">Code</button>
+const         <strong>PROPERTY</strong> <a class="anchor-link"
+            href="#PROPERTY"
+            title="Permalink to ModelType.PROPERTY">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const PROPERTY = const ModelType._internal("p", "PROPERTY")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="STRING">
+<button class="show-code">Code</button>
+const         <strong>STRING</strong> <a class="anchor-link"
+            href="#STRING"
+            title="Permalink to ModelType.STRING">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const STRING = const ModelType._internal("s", "STRING")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="TYPE">
+<button class="show-code">Code</button>
+const         <strong>TYPE</strong> <a class="anchor-link"
+            href="#TYPE"
+            title="Permalink to ModelType.TYPE">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const TYPE = const ModelType._internal("t", "TYPE")
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="UNDEFINED">
+<button class="show-code">Code</button>
+const         <strong>UNDEFINED</strong> <a class="anchor-link"
+            href="#UNDEFINED"
+            title="Permalink to ModelType.UNDEFINED">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const UNDEFINED = const ModelType._internal("u", "UNDEFINED")
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="ModelType">
+<button class="show-code">Code</button>
+factory <strong>ModelType</strong>(<a href="http://api.dartlang.org/dart_core/String.html">String</a> type) <a class="anchor-link" href="#ModelType"
+              title="Permalink to ModelType.ModelType">#</a></h4>
+<div class="doc">
+<pre class="source">
+factory ModelType(String type) {
+ switch (type) {
+   case "d": return BIG_DECIMAL;
+   case "i": return BIG_INTEGER;
+   case "Z": return BOOLEAN;
+   case "b": return BYTES;
+   case "D": return DOUBLE;
+   case "e": return EXPRESSION;
+   case "I": return INT;
+   case "l": return LIST;
+   case "J": return LONG;
+   case "o": return OBJECT;
+   case "p": return PROPERTY;
+   case "s": return STRING;
+   case "t": return TYPE;
+   default: return UNDEFINED;
+ }
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="id">
+<button class="show-code">Code</button>
+final <a href="http://api.dartlang.org/dart_core/String.html">String</a>         <strong>id</strong> <a class="anchor-link"
+            href="#id"
+            title="Permalink to ModelType.id">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get id =&gt; _id;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+<a href="http://api.dartlang.org/dart_core/String.html">String</a> <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to ModelType.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from <a href="http://api.dartlang.org/dart_core/Object.html">Object</a> </div></div>
+<pre class="source">
+String toString() =&gt; _name;
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,98 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>dmr Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="favicon.ico">
+        
+        </head>
+        <body data-library="dmr">
+        <div class="page">
+        <div class="header">
+          <a href="index.html"><div class="logo"></div></a>
+          <a href="index.html">Dart Documentation</a>
+         &rsaquo; <a href="dmr.html">dmr</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+<h2><strong>dmr</strong> library</h2>
+<div class="doc"><p>Client Dart library to execute operations on the JBoss AS7 DMR API.
+For an introduction to DMR please refer to the <a href="https://docs.jboss.org/author/display/AS7/Detyped+management+and+the+jboss-dmr+library">JBoss Wiki</a>.</p>
+<h2>Usage</h2>
+<p>Here's a code snippet to read the version of the loacal server instance:</p>
+<pre><code>var op = new ModelNode();
+op["operation"] = "read-attribute";
+op["address"].setEmptyList();
+op["name"] = "release-version";
+
+var version;
+var dmr = new Dmr("http://localhost:9000/management");
+dmr.send(op)
+  .then((ModelNode node) =&gt; version = node["result"].asString())
+  .catchError((exception) =&gt; print(exception));
+</code></pre></div>
+<div>
+<h3>Abstract Classes</h3>
+          <div class="type">
+          <h4>
+            <a href="dmr/ModelValue.html"><strong>ModelValue</strong></a>
+          </h4>
+          </div>
+          
+</div>
+<div>
+<h3>Classes</h3>
+          <div class="type">
+          <h4>
+            <a href="dmr/Dmr.html"><strong>Dmr</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="dmr/ModelNode.html"><strong>ModelNode</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="dmr/ModelType.html"><strong>ModelType</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="dmr/Property.html"><strong>Property</strong></a>
+          </h4>
+          </div>
+          
+</div>
+<div>
+<h3>Exceptions</h3>
+          <div class="type">
+          <h4>
+            <a href="dmr/DmrException.html"><strong>DmrException</strong></a>
+          </h4>
+          </div>
+          
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="client-live-nav.js"></script>
+        </body></html>
+        
