@@ -1,5 +1,5 @@
 name: dmr
-version: 0.0.2
+version: 0.0.3
 author: Harald Pehl <harald.pehl@gmail.com>
 description: Dart library to execute operations on the JBoss AS7 DMR API.
 homepage: https://github.com/hal/dmr.dart
