@@ -65,7 +65,7 @@ class _BytesValue extends ModelValue {
     if (json) {
       buffer.write("{");
       _indent(buffer..write("\n"), indent + 1);
-      buffer..write(TYPE_KEY)..write(" : ")..write(_Base64.encode(_bytes));
+      buffer..write(TYPE_KEY)..write(" : ")..write(CryptoUtils.bytesToBase64(_bytes));
       _indent(buffer..write("\n"), indent);
       buffer.write("}");
     } else {

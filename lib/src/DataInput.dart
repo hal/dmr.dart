@@ -53,15 +53,15 @@ class _DataInput {
 
   num readNum(ModelType type) {
     if (type == ModelType.INT) {
-      var list = new Int8List.fromList(readBytes(4).reversed.toList());
+      var list = new Int8List.fromList(readBytes(4));
       var data = new ByteData.view(list.buffer);
       return data.getInt32(0);
     } else if (type == ModelType.LONG) {
-      var list = new Int8List.fromList(readBytes(8).reversed.toList());
+      var list = new Int8List.fromList(readBytes(8));
       var data = new ByteData.view(list.buffer);
       return data.getInt64(0);
     } else if (type == ModelType.DOUBLE) {
-      var list = new Int8List.fromList(readBytes(8).reversed.toList());
+      var list = new Int8List.fromList(readBytes(8));
       var data = new ByteData.view(list.buffer);
       return data.getFloat64(0);
     } else {
@@ -71,7 +71,7 @@ class _DataInput {
 
   String readUtf() {
     // read length as "short"
-    var list = new Int8List.fromList(readBytes(2).reversed.toList());
+    var list = new Int8List.fromList(readBytes(2));
     var data = new ByteData.view(list.buffer);
     int bytes = data.getInt16(0);
     var buffer = new StringBuffer();

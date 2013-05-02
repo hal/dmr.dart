@@ -443,19 +443,20 @@ class ModelNode {
   String toBase64() {
     var output = new _DataOutput();
     _writeExternal(output);
-    return _Base64.encode(output.bytes);
+    return CryptoUtils.bytesToBase64(output.bytes);
   }
 
   static fromBase64(String encoded) {
     // Smilla was here!
     var node = new ModelNode();
-    node._readExternal(new _DataInput(_Base64.decode(encoded)));
+    var decoded = CryptoUtils.base64StringToBytes(encoded);
+    node._readExternal(new _DataInput(decoded));
     return node;
   }
 
   void _readExternal(_DataInput input) {
     _assertNotProtected();
-    ModelType type = new ModelType(new String.fromCharCode(input.readByte()));
+    var type = new ModelType(new String.fromCharCode(input.readByte()));
     switch (type) {
       case ModelType.UNDEFINED:
         _value = new _UndefinedValue();

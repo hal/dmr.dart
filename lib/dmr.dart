@@ -43,10 +43,12 @@ library dmr;
 
 import "dart:async";
 import "dart:collection";
+import "dart:crypto";
+//import "dart:fixnum";
 import "dart:html";
 import "dart:json";
 import "dart:math";
-import "dart:typeddata";
+import "dart:typed_data";
 import 'package:meta/meta.dart';
 
 part "src/Dmr.dart";
@@ -56,7 +58,6 @@ part "src/ModelValue.dart";
 part "src/ModelType.dart";
 part "src/Property.dart";
 
-part "src/Base64.dart";
 part "src/BooleanValue.dart";
 part "src/BytesValue.dart";
 part "src/DataInput.dart";

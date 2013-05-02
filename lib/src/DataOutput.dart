@@ -47,19 +47,19 @@ class _DataOutput {
         var list = new Int8List(4);
         var data = new ByteData.view(list.buffer);
         data.setInt32(0, v);
-        _bytes.addAll(new List<int>.from(list).reversed);
+        _bytes.addAll(list);
         break;
       case ModelType.LONG:
         var list = new Int8List(8);
         var data = new ByteData.view(list.buffer);
         data.setInt64(0, v);
-        _bytes.addAll(new List<int>.from(list).reversed);
+        _bytes.addAll(list);
         break;
       case ModelType.DOUBLE:
         var list = new Int8List(8);
         var data = new ByteData.view(list.buffer);
         data.setFloat64(0, v);
-        _bytes.addAll(new List<int>.from(list).reversed);
+        _bytes.addAll(list);
         break;
       case ModelType.BIG_DECIMAL:
       case ModelType.BIG_INTEGER:
@@ -86,7 +86,7 @@ class _DataOutput {
     var list = new Int8List(2);
     var data = new ByteData.view(list.buffer);
     data.setInt16(0, sBytes.length);
-    _bytes.addAll(new List<int>.from(list).reversed);
+    _bytes.addAll(list);
     writeBytes(sBytes);
   }
 }
