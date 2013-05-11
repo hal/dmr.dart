@@ -23,7 +23,7 @@ dmr.send(op)
 
 ## Requirements
 For the example to work, you need a running JBoss AS instance which accepts CORS requests. You can build one 
-by cloning the [AS8 CORS branch](https://github.com/hpehl/jboss-as/tree/cors). If you have trouble with CORS,
+by cloning the [AS8 CORS branch](https://github.com/hpehl/wildfly/tree/cors). If you have trouble with CORS,
 take a look at this [blog post](http://hpehl.info/independent-jboss-admin-console.html).
 
 ## Known Issues
