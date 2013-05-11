@@ -24,7 +24,7 @@ dmr.send(op)
 ## Requirements
 For the example to work, you need a running JBoss AS instance which accepts CORS requests. You can build one 
 by cloning the [AS8 CORS branch](https://github.com/hpehl/jboss-as/tree/cors). If you have trouble with CORS,
-take a look at this [blog post](http://haraldpehl.blogspot.de/2013/03/independent-jboss-admin-console.html).
+take a look at this [blog post](http://hpehl.info/independent-jboss-admin-console.html).
 
 ## Known Issues
 - Due to a [bug](https://code.google.com/p/dart/issues/detail?id=3247) in Dart, DMR.dart currently works only in Dartium.
